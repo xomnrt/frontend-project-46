@@ -1,6 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 import { setStylish, setPlain } from './formatter.js';
 
+function sortedObject(obj) {
+  const orderedObj = {};
+  Object.keys(obj).sort().forEach((key) => {
+    orderedObj[key] = obj[key];
+  });
+
+  return orderedObj;
+}
+
 export function genDiff(obj1, obj2) {
   const resultObj = {};
 
@@ -12,30 +21,13 @@ export function genDiff(obj1, obj2) {
 
   for (const [key, value] of Object.entries(obj2)) {
     if (Object.hasOwn(obj1, key)) {
-      if (
-        (typeof obj1[key] === 'object' && obj1[key] !== null)
-        && (typeof value === 'object' && value !== null)
-      ) {
-        const newDiff = genDiff(obj1[key], value);
-
-        const changed = Object.values(newDiff)
-          .findIndex((subvalue) => subvalue !== 'unchanged') > 0;
-
-        resultObj[key] = changed ? newDiff : 'unchanged';
-      } else {
-        resultObj[key] = obj1[key] === value ? 'unchanged' : 'changed';
-      }
-    }
-    if (!Object.hasOwn(obj1, key)) {
+      resultObj[key] = obj1[key] === value ? 'unchanged' : 'changed';
+    } else {
       resultObj[key] = 'added';
     }
   }
-  const orderedObj = {};
-  Object.keys(resultObj).sort().forEach((key) => {
-    orderedObj[key] = resultObj[key];
-  });
 
-  return orderedObj;
+  return sortedObject(resultObj);
 }
 
 export function genDiffFormatter(obj1, obj2, format = 'stylish') {
