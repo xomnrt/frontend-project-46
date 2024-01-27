@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { setStylish, setPlain } from './formatter.js';
+import parseObjectFromFile from './index.js';
 
 function sortedObject(obj) {
   const orderedObj = {};
@@ -43,4 +44,10 @@ export function genDiffFormatted(obj1, obj2, format) {
     default:
       throw new Error(`Incorrect format: ${format}`);
   }
+}
+
+export function compareFiles(filePath1, filePath2, format) {
+  const obj1 = parseObjectFromFile(filePath1);
+  const obj2 = parseObjectFromFile(filePath2);
+  return genDiffFormatted(obj1, obj2, format);
 }

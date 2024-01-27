@@ -1,0 +1,7 @@
+{
+  "follow": "deleted",
+  "host": "unchanged",
+  "proxy": "deleted",
+  "timeout": "changed",
+  "verbose": "added"
+}
