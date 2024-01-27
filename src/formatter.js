@@ -6,17 +6,17 @@ export function setStylish(obj, obj1, obj2) {
   for (const [key, value] of Object.entries(obj)) {
     switch (value) {
       case 'unchanged':
-        objAsString += `\n  ${key}: ${obj1[key]},`;
+        objAsString += `\n  ${key}: ${obj1[key]}`;
         break;
       case 'changed':
-        objAsString += `\n  - ${key}: ${obj1[key]},`;
-        objAsString += `\n  + ${key}: ${obj2[key]},`;
+        objAsString += `\n  - ${key}: ${obj1[key]}`;
+        objAsString += `\n  + ${key}: ${obj2[key]}`;
         break;
       case 'deleted':
-        objAsString += `\n  + ${key}: ${obj1[key]},`;
+        objAsString += `\n  + ${key}: ${obj1[key]}`;
         break;
       case 'added':
-        objAsString += `\n  + ${key}: ${obj2[key]},`;
+        objAsString += `\n  + ${key}: ${obj2[key]}`;
         break;
       default:
     }

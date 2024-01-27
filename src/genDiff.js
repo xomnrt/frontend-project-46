@@ -30,7 +30,7 @@ export function genDiff(obj1, obj2) {
   return sortedObject(resultObj);
 }
 
-export function genDiffFormatter(obj1, obj2, format = 'stylish') {
+export function genDiffFormatted(obj1, obj2, format) {
   const diff = genDiff(obj1, obj2);
 
   switch (format) {
@@ -44,19 +44,3 @@ export function genDiffFormatter(obj1, obj2, format = 'stylish') {
       throw new Error(`Incorrect format: ${format}`);
   }
 }
-
-// const obj1 = {
-//   host: 'hexlet.io',
-//   timeout: 50,
-//   proxy: '123.234.53.22',
-//   follow: false,
-// };
-
-// const obj2 = {
-//   timeout: 20,
-//   verbose: true,
-//   host: 'hexlet.io',
-// };
-
-// const res = genDiffFormatter(obj1, obj2, 'json');
-// console.log(res);
