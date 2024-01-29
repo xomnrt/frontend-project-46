@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import { compareFiles } from '../src/genDiff.js';
+import compareFiles from '../src/index.js';
 
 const cases = [
   ['file1.json', 'file2.yml', 'json', 'file1_file2.json'],

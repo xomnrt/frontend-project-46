@@ -1,9 +1,7 @@
-/* eslint-disable no-restricted-syntax */
-
-export function setStylish(obj, obj1, obj2) {
+function setStylish(obj, obj1, obj2) {
   let objAsString = '{';
 
-  for (const [key, value] of Object.entries(obj)) {
+  Object.entries(obj).forEach(([key, value]) => {
     switch (value) {
       case 'unchanged':
         objAsString += `\n  ${key}: ${obj1[key]}`;
@@ -20,16 +18,17 @@ export function setStylish(obj, obj1, obj2) {
         break;
       default:
     }
-  }
+  });
+
   objAsString += '\n}';
 
   return objAsString;
 }
 
-export function setPlain(obj, obj1, obj2) {
+function setPlain(obj, obj1, obj2) {
   let objAsString = '{';
 
-  for (const [key, value] of Object.entries(obj)) {
+  Object.entries(obj).forEach(([key, value]) => {
     switch (value) {
       case 'changed':
         objAsString += `\n  Property '${key}' was updated. From ${obj1[key]} to ${obj2[key]}`;
@@ -42,7 +41,22 @@ export function setPlain(obj, obj1, obj2) {
         break;
       default:
     }
-  }
+  });
+
   objAsString += '\n}';
+
   return objAsString;
+}
+
+export default function formatDiff(diff, obj1, obj2, format) {
+  switch (format) {
+    case 'json':
+      return JSON.stringify(diff, null, '  ');
+    case 'plain':
+      return setPlain(diff, obj1, obj2);
+    case 'stylish':
+      return setStylish(diff, obj1, obj2);
+    default:
+      throw new Error(`Incorrect format: ${format}`);
+  }
 }
