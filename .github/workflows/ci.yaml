@@ -40,4 +40,4 @@ jobs:
         with:
           coverageCommand: make test-coverage
           debug: true
-          coverageLocations: ${{github.workspace}}/*.lcov:lcov
+          coverageLocations: ${{github.workspace}}/test-cov.lcov:lcov
