@@ -1,26 +1,50 @@
-function setStylish(obj, obj1, obj2) {
+const pad = '  ';
+
+function printUnchanged(valueToPrint, depth) {
+  if (valueToPrint === null || typeof valueToPrint !== 'object') {
+    return `${valueToPrint}`;
+  }
+
+  let unchandedPart = '{';
+
+  Object.entries(valueToPrint).forEach(([key, value]) => {
+    unchandedPart += `\n${pad.repeat(depth)}${key}: ${printUnchanged(value, depth + 2)}`;
+  });
+
+  unchandedPart += `\n${pad.repeat(depth - 2)}}`;
+
+  return unchandedPart;
+}
+
+function setStylish(diff, obj1, obj2, depth = 2) {
   let objAsString = '{';
 
-  Object.entries(obj).forEach(([key, value]) => {
-    switch (value) {
+  Object.entries(diff).forEach(([field, diffState]) => {
+    // console.log(`diffstate: ${field} ==> ${diffState}`);
+
+    if (typeof diffState === 'object') {
+      objAsString += `\n${pad.repeat(depth)}${field}: ${setStylish(diffState, obj1[field], obj2[field], depth + 2)}`;
+    }
+
+    switch (diffState) {
       case 'unchanged':
-        objAsString += `\n  ${key}: ${obj1[key]}`;
+        objAsString += `\n${pad.repeat(depth)}${field}: ${printUnchanged(obj1[field], depth + 2)}`;
         break;
       case 'changed':
-        objAsString += `\n  - ${key}: ${obj1[key]}`;
-        objAsString += `\n  + ${key}: ${obj2[key]}`;
+        objAsString += `\n${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
+        objAsString += `\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
         break;
       case 'deleted':
-        objAsString += `\n  + ${key}: ${obj1[key]}`;
+        objAsString += `\n${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
         break;
       case 'added':
-        objAsString += `\n  + ${key}: ${obj2[key]}`;
+        objAsString += `\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
         break;
       default:
     }
   });
 
-  objAsString += '\n}';
+  objAsString += `\n${pad.repeat(depth - 2)}}`;
 
   return objAsString;
 }
