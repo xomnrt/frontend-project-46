@@ -22,6 +22,17 @@ make publish
 npm link
 ```
 
+### Console launch + options:
+
+```
+dist/bin/gendiff.js [options] <firstConfig> <secondConfig>
+
+-v, --version        output the version number
+-f, --format [type]  output format
+-h, --help           output usage information
+
+```
+
 ### Example:
 
 [![asciicast](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa.svg)](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa)

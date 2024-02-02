@@ -11,6 +11,5 @@ program
   .action((filePath1, filePath2, options) => {
     const res = compareFiles(filePath1, filePath2, options.format);
     console.log(res);
-  });
-
-program.parse();
+  })
+  .parse();
