@@ -49,27 +49,39 @@ function setStylish(diff, obj1, obj2, depth = 2) {
   return objAsString;
 }
 
-function setPlain(obj, obj1, obj2) {
-  let objAsString = '{';
+function setPlain(diff, obj1, obj2, prefix = '') {
+  function fillComplexValue(valueToPrint) {
+    if (valueToPrint === null || typeof valueToPrint !== 'object') {
+      if (typeof valueToPrint === 'string') {
+        return `'${valueToPrint}'`;
+      }
+      return `${valueToPrint}`;
+    }
+    return '[complex value]';
+  }
 
-  Object.entries(obj).forEach(([key, value]) => {
-    switch (value) {
+  let objAsString = '';
+
+  Object.entries(diff).forEach(([key, status]) => {
+    if (typeof status === 'object') {
+      objAsString += '\n';
+      objAsString += setPlain(diff[key], obj1[key], obj2[key], `${prefix}${key}.`);
+    }
+    switch (status) {
       case 'changed':
-        objAsString += `\n  Property '${key}' was updated. From ${obj1[key]} to ${obj2[key]}`;
+        objAsString += `\nProperty '${prefix}${key}' was updated. From ${fillComplexValue(obj1[key])} to ${fillComplexValue(obj2[key])}`;
         break;
       case 'deleted':
-        objAsString += `\n  Property '${key}' was removed`;
+        objAsString += `\nProperty '${prefix}${key}' was removed`;
         break;
       case 'added':
-        objAsString += `\n  Property '${key}' was added with value: ${obj2[key]}`;
+        objAsString += `\nProperty '${prefix}${key}' was added with value: ${fillComplexValue(obj2[key])}`;
         break;
       default:
     }
   });
 
-  objAsString += '\n}';
-
-  return objAsString;
+  return objAsString.trim();
 }
 
 export default function formatDiff(diff, obj1, obj2, format) {
