@@ -7,3 +7,11 @@
 ### Example:
 
 [![asciicast](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa.svg)](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa)
+
+### Compare JSON files:
+
+[![asciicast](https://asciinema.org/a/vB082p9fNFbA95Sho8XRLN12V.svg)](https://asciinema.org/a/vB082p9fNFbA95Sho8XRLN12V)
+
+### Compare YAML files:
+
+[![asciicast](https://asciinema.org/a/cZ7649ZKVlvXBjlir1pGrJKiZ.svg)](https://asciinema.org/a/cZ7649ZKVlvXBjlir1pGrJKiZ)
