@@ -24,19 +24,22 @@ function setStylish(diff, obj1, obj2, depth = 2) {
       objAsString += `\n${pad.repeat(depth)}${field}: ${setStylish(diffState, obj1[field], obj2[field], depth + 2)}`;
     }
 
+    const removed = `\n${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
+    const added = `\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
+
     switch (diffState) {
       case 'unchanged':
         objAsString += `\n${pad.repeat(depth)}${field}: ${printUnchanged(obj1[field], depth + 2)}`;
         break;
       case 'changed':
-        objAsString += `\n${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
-        objAsString += `\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
+        objAsString += removed;
+        objAsString += added;
         break;
       case 'deleted':
-        objAsString += `\n${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
+        objAsString += removed;
         break;
       case 'added':
-        objAsString += `\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
+        objAsString += added;
         break;
       default:
     }
