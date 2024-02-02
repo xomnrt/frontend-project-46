@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "second project for hexlet webdev program",
-  "main": "bin/gendiff.js",
+  "main": "src/index.js",
   "bin": {
     "code": "bin/gendiff.js"
   },
