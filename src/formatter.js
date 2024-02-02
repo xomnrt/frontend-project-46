@@ -20,8 +20,6 @@ function setStylish(diff, obj1, obj2, depth = 2) {
   let objAsString = '{';
 
   Object.entries(diff).forEach(([field, diffState]) => {
-    // console.log(`diffstate: ${field} ==> ${diffState}`);
-
     if (typeof diffState === 'object') {
       objAsString += `\n${pad.repeat(depth)}${field}: ${setStylish(diffState, obj1[field], obj2[field], depth + 2)}`;
     }
@@ -49,17 +47,14 @@ function setStylish(diff, obj1, obj2, depth = 2) {
   return objAsString;
 }
 
-function setPlain(diff, obj1, obj2, prefix = '') {
-  function fillComplexValue(valueToPrint) {
-    if (valueToPrint === null || typeof valueToPrint !== 'object') {
-      if (typeof valueToPrint === 'string') {
-        return `'${valueToPrint}'`;
-      }
-      return `${valueToPrint}`;
-    }
-    return '[complex value]';
+function fillComplexValue(valueToPrint) {
+  if (valueToPrint === null || typeof valueToPrint !== 'object') {
+    return typeof valueToPrint === 'string' ? `'${valueToPrint}'` : `${valueToPrint}`;
   }
+  return '[complex value]';
+}
 
+function setPlain(diff, obj1, obj2, prefix = '') {
   let objAsString = '';
 
   Object.entries(diff).forEach(([key, status]) => {
