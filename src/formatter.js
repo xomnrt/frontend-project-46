@@ -88,6 +88,6 @@ export default function formatDiff(diff, obj1, obj2, format) {
     case 'stylish':
       return setStylish(diff, obj1, obj2);
     default:
-      throw new Error(`Incorrect format: ${format}`);
+      // throw new Error(`Incorrect format: ${format}`);
   }
 }
