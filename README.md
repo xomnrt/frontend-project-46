@@ -4,6 +4,24 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/ad0b0e1883e4469667ff/maintainability)](https://codeclimate.com/github/xomnrt/frontend-project-46/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ad0b0e1883e4469667ff/test_coverage)](https://codeclimate.com/github/xomnrt/frontend-project-46/test_coverage)
 
+### Diffence generator info:
+
+Difference generator is a program that determines the difference between two data structures.
+
+Features:
+
+Support of different input formats: yaml, json
+Report generation in plain text, stylish and json formats
+
+### Setup
+
+```
+git clone 'git@github.com:xomnrt/frontend-project-46.git'
+make install
+make publish
+npm link
+```
+
 ### Example:
 
 [![asciicast](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa.svg)](https://asciinema.org/a/t0mUPJQZH6G15Mi8vrcTWWtYa)
