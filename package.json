@@ -1,5 +1,5 @@
 {
-  "name": "gendiff",
+  "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "second project for hexlet webdev program",
   "main": "src/index.js",
