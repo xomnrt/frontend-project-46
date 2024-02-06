@@ -81,6 +81,6 @@ export default function formatDiff(diff, obj1, obj2, format) {
     case 'stylish':
       return setStylish(diff, obj1, obj2);
     default:
-      throw new Error(`incorrect format ${format}`);
+      throw new Error(`incorrect format ${JSON.stringify(format)}`);
   }
 }
