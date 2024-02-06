@@ -1,6 +1,8 @@
 env:
   es2021: true
   node: true
+plugins:
+  - fp
 extends:
   - plugin:jest/recommended
   - airbnb-base
@@ -13,4 +15,10 @@ rules:
     - error
     - ignorePackages
     - js: always
+  fp/no-mutating-methods:
+    - error
+  fp/no-mutation:
+    - error
+    - commonjs: true
+      allowThis: true
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]

@@ -1,38 +1,62 @@
-/* eslint-disable no-restricted-syntax */
+// obj = {
+//     timeout: 'changed',
+//     verbose: 'added',
+//     follow: 'deleted',
+//     host: 'unchanged',
+//     proxy: 'deleted',
+// };
+// return = {
+//     follow: 'deleted',
+//     host: 'unchanged',
+//     proxy: 'deleted',
+//     timeout: 'changed',
+//     verbose: 'added',
+// }
 function sortedObject(obj) {
-  const orderedObj = {};
-  Object.keys(obj).sort().forEach((key) => {
-    orderedObj[key] = obj[key];
-  });
+  return Object.fromEntries(
+    Object.entries(obj)
+      .toSorted((a, b) => {
+        const aKey = a[0];
+        const bKey = b[0];
 
-  return orderedObj;
+        if (aKey === bKey) {
+          return 0;
+        }
+
+        return aKey < bKey ? -1 : 1;
+      })
+      .map(([key, value]) => [
+        key,
+        typeof value === 'object' && value !== null ? sortedObject(value) : value,
+      ]),
+  );
 }
 
 export default function genDiff(obj1, obj2) {
-  const obj = {};
+  const deletedEntries = Object.keys(obj1)
+    .filter((key) => !Object.hasOwn(obj2, key))
+    .map((key) => [key, 'deleted']);
 
-  Object.keys(obj1).forEach((key) => {
-    if (!Object.hasOwn(obj2, key)) {
-      obj[key] = 'deleted';
-    }
-  });
+  const addedEntries = Object.keys(obj2)
+    .filter((key) => !Object.hasOwn(obj1, key))
+    .map((key) => [key, 'added']);
 
-  for (const [key, value] of Object.entries(obj2)) {
-    if (Object.hasOwn(obj1, key)) {
+  const unchangedEntries = Object.keys(obj1)
+    .filter((key) => Object.hasOwn(obj2, key) && obj1[key] === obj2[key])
+    .map((key) => [key, 'unchanged']);
+
+  const changedEntries = Object.keys(obj1)
+    .filter((key) => Object.hasOwn(obj2, key) && obj1[key] !== obj2[key])
+    .map((key) => {
       if (
         (typeof obj1[key] === 'object' && obj1[key] !== null)
-        && (typeof value === 'object' && value !== null)
-      ) {
-        const newDiff = genDiff(obj1[key], value);
-
-        obj[key] = newDiff;
-      } else {
-        obj[key] = obj1[key] === value ? 'unchanged' : 'changed';
+        && (typeof obj2[key] === 'object' && obj2[key] !== null)) {
+        return [key, genDiff(obj1[key], obj2[key])];
       }
-    }
-    if (!Object.hasOwn(obj1, key)) {
-      obj[key] = 'added';
-    }
-  }
-  return sortedObject(obj);
+      return [key, 'changed'];
+    });
+
+  const entries = [...deletedEntries, ...addedEntries, ...unchangedEntries, ...changedEntries];
+  const res = Object.fromEntries(entries);
+  return sortedObject(res);
 }
