@@ -14,22 +14,22 @@ function printUnchanged(valueToPrint, depth) {
   return unchandedPart;
 }
 
-function setStylish(diff, obj1, obj2, depth = 2) {
+function setStylish(diff, depth = 2) {
   const lines = Object.entries(diff).map(([field, diffState]) => {
-    if (typeof diffState === 'object') {
-      return `${pad.repeat(depth)}${field}: ${setStylish(diffState, obj1[field], obj2[field], depth + 2)}`;
+    if (diffState.state === 'changed' && Object.hasOwn(diffState, 'fields')) {
+      return `${pad.repeat(depth)}${field}: ${setStylish(diffState.fields, depth + 2)}`;
     }
-    switch (diffState) {
+    switch (diffState.state) {
       case 'unchanged':
-        return `${pad.repeat(depth)}${field}: ${printUnchanged(obj1[field], depth + 2)}`;
+        return `${pad.repeat(depth)}${field}: ${printUnchanged(diffState.value, depth + 2)}`;
       case 'changed':
-        return `${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
+        return `${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(diffState.oldValue, depth + 2)}\n${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(diffState.newValue, depth + 2)}`;
       case 'deleted':
-        return `${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(obj1[field], depth + 2)}`;
+        return `${pad.repeat(depth - 1)}- ${field}: ${printUnchanged(diffState.oldValue, depth + 2)}`;
       case 'added':
-        return `${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(obj2[field], depth + 2)}`;
+        return `${pad.repeat(depth - 1)}+ ${field}: ${printUnchanged(diffState.newValue, depth + 2)}`;
       default:
-        throw new Error(`bad diffState ${diffState}`);
+        throw new Error(`bad diffState ${diffState.state}`);
     }
   });
 
@@ -48,22 +48,22 @@ function fillComplexValue(valueToPrint) {
   return `${valueToPrint}`;
 }
 
-function setPlain(diff, obj1, obj2, prefix = '') {
+function setPlain(diff, prefix = '') {
   const lines = Object.entries(diff)
-    .filter(([key]) => diff[key] !== 'unchanged')
+    .filter(([, status]) => status.state !== 'unchanged')
     .map(([key, status]) => {
-      if (typeof status === 'object') {
-        return setPlain(diff[key], obj1[key], obj2[key], `${prefix}${key}.`);
+      if (status.state === 'changed' && Object.hasOwn(status, 'fields')) {
+        return setPlain(status.fields, `${prefix}${key}.`);
       }
-      switch (status) {
+      switch (status.state) {
         case 'changed':
-          return `Property '${prefix}${key}' was updated. From ${fillComplexValue(obj1[key])} to ${fillComplexValue(obj2[key])}`;
+          return `Property '${prefix}${key}' was updated. From ${fillComplexValue(status.oldValue)} to ${fillComplexValue(status.newValue)}`;
         case 'deleted':
           return `Property '${prefix}${key}' was removed`;
         case 'added':
-          return `Property '${prefix}${key}' was added with value: ${fillComplexValue(obj2[key])}`;
+          return `Property '${prefix}${key}' was added with value: ${fillComplexValue(status.newValue)}`;
         default:
-          throw new Error(`bad status ${status}`);
+          throw new Error(`bad status ${status.state}`);
       }
     });
 
@@ -72,14 +72,14 @@ function setPlain(diff, obj1, obj2, prefix = '') {
   return objAsString.trim();
 }
 
-export default function formatDiff(diff, obj1, obj2, format) {
+export default function formatDiff(diff, format) {
   switch (format) {
     case 'json':
       return JSON.stringify(diff, null, '  ');
     case 'plain':
-      return setPlain(diff, obj1, obj2);
+      return setPlain(diff);
     case 'stylish':
-      return setStylish(diff, obj1, obj2);
+      return setStylish(diff);
     default:
       throw new Error(`incorrect format ${JSON.stringify(format)}`);
   }
